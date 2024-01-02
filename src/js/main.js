@@ -93,7 +93,12 @@ const transform = () => {
 };
 
 const errorHandling = () => {
-  console.log("errorHandling");
+  axios.get('https://jsonplaceholder.typicode.com/posts?limit=5') //adicionar erro para testar
+  .then((response) => renderOutput(response))
+  .catch((error) => {
+    renderOutput(error.response)
+    console.log(error.response);
+  })
 };
 
 const cancel = () => {
