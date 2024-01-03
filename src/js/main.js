@@ -62,6 +62,7 @@ const post = async () => {
     });
 };
 
+//----PUT
 const put = () => {
   const data = {
     title: "teste",
@@ -75,7 +76,7 @@ const put = () => {
 
   console.log("Rodou o put");
 };
-
+//----PATCH
 const patch = () => {
   const data = {
     title: "testePatch",
@@ -90,6 +91,7 @@ const patch = () => {
   console.log("Rodou o patch");
 };
 
+//----DELETE
 const del = () => {
   axios
     .delete("posts/2")
@@ -98,6 +100,7 @@ const del = () => {
   console.log("Rodou o del");
 };
 
+//---MULTIPLE
 const multiple = () => {
   Promise.all([
     axios.get("posts?limit=5"),
@@ -114,10 +117,12 @@ const multiple = () => {
   // console.log("multiple");
 };
 
+//---TRANSFORM
 const transform = () => {
   console.log("transform");
 };
 
+//---ERROR-HANDLING
 const errorHandling = () => {
   axios.get('posts?limit=5') //adicionar erro para testar
   .then((response) => renderOutput(response))
@@ -127,6 +132,7 @@ const errorHandling = () => {
   })
 };
 
+//---CANCEL
 const cancel = () => {
   const controller = new AbortController();
   const config = {
@@ -140,6 +146,7 @@ const cancel = () => {
   controller.abort();
 };
 
+//---CLEAR
 const clear = () => {
   statusEl.innerHTML = "";
   statusEl.className = "";
