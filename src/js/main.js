@@ -3,6 +3,28 @@ const dataEl = document.getElementById("data");
 const headersEl = document.getElementById("headers");
 const configEl = document.getElementById("config");
 
+
+//criando axios base url
+axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
+
+//criando nova instancia do axios
+const newAxios = axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com",
+  headers: {
+    common: {
+      "Content-Type": "application/json",
+    },
+  }
+})
+
+//-------INTERCEPTORS (Request)
+axios.interceptors.request.use((config) => {
+  console.log("Passou no interceptor");
+  return config
+})
+
+
+//------GET
 const get = () => {
   const config = {
     params: {
@@ -10,16 +32,20 @@ const get = () => {
     },
   };
 
-  axios
-    .get("https://jsonplaceholder.typicode.com/posts", config)
+  //usando a nova instancia do axios
+  newAxios 
+    .get("posts", config)
 
     .then((response) => {
       renderOutput(response);
     });
 
-  console.log("get");
+  console.log("Rodou o get")
+  console.log(localStorage)
 };
 
+
+//-----POST
 const post = async () => {
   const data = {
     id: 1,
@@ -28,12 +54,12 @@ const post = async () => {
   };
 
   const response = await axios
-    .post("https://jsonplaceholder.typicode.com/posts", data)
-    renderOutput(response)
-    .then((response) => {
-      renderOutput(response);
+  .post("posts", data)
+  console.log("Rodou o post")
+  renderOutput(response)
+  .then((response) => {
+    renderOutput(response);
     });
-  console.log("post");
 };
 
 const put = () => {
@@ -43,11 +69,11 @@ const put = () => {
   };
 
   axios
-    .put("https://jsonplaceholder.typicode.com/posts/1", data)
+    .put("posts/1", data)
 
     .then((response) => renderOutput(response));
 
-  console.log("put");
+  console.log("Rodou o put");
 };
 
 const patch = () => {
@@ -57,28 +83,28 @@ const patch = () => {
   };
 
   axios
-    .patch("https://jsonplaceholder.typicode.com/posts/1", data)
+    .patch("posts/1", data)
 
     .then((response) => renderOutput(response));
 
-  console.log("patch");
+  console.log("Rodou o patch");
 };
 
 const del = () => {
   axios
-    .delete("https://jsonplaceholder.typicode.com/posts/2")
+    .delete("posts/2")
     .then((response) => renderOutput(response));
 
-  console.log();
+  console.log("Rodou o del");
 };
 
 const multiple = () => {
   Promise.all([
-    axios.get("https://jsonplaceholder.typicode.com/posts?limit=5"),
-    axios.get("https://jsonplaceholder.typicode.com/users?limit=5"),
+    axios.get("posts?limit=5"),
+    axios.get("users?limit=5"),
   ]).then((response) => {
     console.table(response[0].data);
-    // console.table(response[1].data);
+    console.table(response[1].data);
     console.log(response[0].data); //todo o array de objetos
     console.log(response[0].status); //código de resposta Ex: 200
     console.log(response[0].statusText); //texto da resposta Ex: OK
@@ -93,7 +119,7 @@ const transform = () => {
 };
 
 const errorHandling = () => {
-  axios.get('https://jsonplaceholder.typicode.com/posts?limit=5') //adicionar erro para testar
+  axios.get('posts?limit=5') //adicionar erro para testar
   .then((response) => renderOutput(response))
   .catch((error) => {
     renderOutput(error.response)
@@ -102,7 +128,16 @@ const errorHandling = () => {
 };
 
 const cancel = () => {
-  console.log("cancel");
+  const controller = new AbortController();
+  const config = {
+    params: {
+      _limit: 5,
+    },
+    signal: controller.signal
+  }
+  axios.get('posts?limit=5', config)
+  .then((response) => renderOutput(response))
+  controller.abort();
 };
 
 const clear = () => {
@@ -153,3 +188,5 @@ document.getElementById("transform").addEventListener("click", transform);
 document.getElementById("cancel").addEventListener("click", cancel);
 document.getElementById("error").addEventListener("click", errorHandling);
 document.getElementById("clear").addEventListener("click", clear);
+
+
